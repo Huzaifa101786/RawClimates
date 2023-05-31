@@ -48,12 +48,6 @@ C:\Users\muhammad.huzaifa\source\repos\RawClimates\RawClimates\obj\Debug\net5.0\
 C:\Users\muhammad.huzaifa\source\repos\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.pdb
 C:\Users\muhammad.huzaifa\source\repos\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.genruntimeconfig.cache
 C:\Users\muhammad.huzaifa\source\repos\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.csproj.AssemblyReference.cache
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.GeneratedMSBuildEditorConfig.editorconfig
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.AssemblyInfoInputs.cache
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.AssemblyInfo.cs
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.csproj.CoreCompileInputs.cache
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.MvcApplicationPartsAssemblyInfo.cs
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.MvcApplicationPartsAssemblyInfo.cache
 D:\RawClimates\RawClimates\bin\Debug\net5.0\appsettings.Development.json
 D:\RawClimates\RawClimates\bin\Debug\net5.0\appsettings.json
 D:\RawClimates\RawClimates\bin\Debug\net5.0\RawClimates.exe
@@ -93,6 +87,13 @@ D:\RawClimates\RawClimates\bin\Debug\net5.0\ZstdSharp.dll
 D:\RawClimates\RawClimates\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
 D:\RawClimates\RawClimates\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
 D:\RawClimates\RawClimates\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.csproj.AssemblyReference.cache
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.GeneratedMSBuildEditorConfig.editorconfig
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.AssemblyInfoInputs.cache
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.AssemblyInfo.cs
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.csproj.CoreCompileInputs.cache
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.MvcApplicationPartsAssemblyInfo.cs
+D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.MvcApplicationPartsAssemblyInfo.cache
 D:\RawClimates\RawClimates\obj\Debug\net5.0\staticwebassets\RawClimates.StaticWebAssets.Manifest.cache
 D:\RawClimates\RawClimates\obj\Debug\net5.0\staticwebassets\RawClimates.StaticWebAssets.xml
 D:\RawClimates\RawClimates\obj\Debug\net5.0\scopedcss\bundle\RawClimates.styles.css
@@ -102,4 +103,3 @@ D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.dll
 D:\RawClimates\RawClimates\obj\Debug\net5.0\ref\RawClimates.dll
 D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.pdb
 D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.genruntimeconfig.cache
-D:\RawClimates\RawClimates\obj\Debug\net5.0\RawClimates.csproj.AssemblyReference.cache

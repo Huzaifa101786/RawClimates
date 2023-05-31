@@ -14,6 +14,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+
 
 namespace RawClimates.Controllers
 {
@@ -30,7 +32,11 @@ namespace RawClimates.Controllers
             _weatherData = weatherdata;
             //_invalidWeatherTrigger = invalidWeatherTrigger;
         }
-       
+
+        
+
+    
+
         /*a*/
         [HttpPost("api/AddNewWeatherData")]
         public async Task<IActionResult> AddNewWeatherData(WeatherData data)
@@ -72,7 +78,7 @@ namespace RawClimates.Controllers
                      }
                  }*/
 
-                return Ok(data);
+                return Ok("New Weather Data Added");
             }
             else
             {
@@ -82,39 +88,41 @@ namespace RawClimates.Controllers
         }
 
         /*c*/
-        [HttpPost("api/BulkUploadByJsonFile")]
-        public IActionResult BulkUploadByJsonFile(IFormFile file)
+        [HttpPost("api/BulkUploadWeatherData")]
+        public async Task<IActionResult> BulkUploadWeatherData(IFormFile file)
         {
             var sessionAccess = HttpContext.Session.GetString("username");
             if (sessionAccess == "Admin" || sessionAccess == "User")
             {
-                if (file == null || file.Length <= 0)
-                return BadRequest("No file was uploaded.");
 
-                using (var reader = new StreamReader(file.OpenReadStream()))
-                {
-                    var jsonString = reader.ReadToEnd();
-                    var options = new JsonSerializerOptions
+                    if (file == null || file.Length == 0)
+                        return BadRequest("No file uploaded.");
+
+                    using var streamReader = new StreamReader(file.OpenReadStream());
+                    var jsonContent = await streamReader.ReadToEndAsync();
+
+                   
+
+                    var weatherDataList = JsonSerializer.Deserialize<List<WeatherData>>(jsonContent);
+                    var countBeforeInsertion = await _weatherData.CountDocumentsAsync(FilterDefinition<WeatherData>.Empty);
+
+                    foreach (var weatherData in weatherDataList)
                     {
-                        PropertyNameCaseInsensitive = true,
-                        //Converters = { new DateTimeConverter() }
-                    };
+                        weatherData.Id = ObjectId.GenerateNewId();
+                        weatherData.Time = new DateTime(weatherData.Time.Ticks);
+                    }
 
-                    var data = JsonSerializer.Deserialize<WeatherData[]>(jsonString, options);
+                    await _weatherData.InsertManyAsync(weatherDataList);
 
-
-                    _weatherData.InsertMany(data);
-                    return Ok("Data uploaded successfully.");
-
+                    return Ok("Weather data uploaded successfully.");
                 }
-            }
             else
             {
-                return BadRequest("Seems like you have not logged in ");
+                return BadRequest("Seems like you have not logged in.");
             }
-
-           
+            
         }
+       
 
         /*d*/
         [HttpGet("api/MaximumPrecipitationInLast5Months")]
@@ -229,59 +237,59 @@ namespace RawClimates.Controllers
             var sessionAccess = HttpContext.Session.GetString("username");
             if (sessionAccess == "Admin" || sessionAccess == "User")
             {
-                 DateTime startDate = startdate;/*new DateTime(2020, 1, 1, 0, 0, 0);*/ // Example: January 1, 2023, 12:00:00 AM
-                 DateTime finishDate = finishdate; /*new DateTime(2023, 5, 23, 23, 59, 59);*/ // Example: January 31, 2023, 11:59:59 PM
-                 
-                 // Build the filter to match the date/time range
-                 var filter = Builders<WeatherData>.Filter.And(
-                     Builders<WeatherData>.Filter.Gte(x => x.Time, startDate),
-                     Builders<WeatherData>.Filter.Lte(x => x.Time, finishDate)
-                 );
-                 
-                 // Define the projection to include the desired fields
-                 var projection = Builders<WeatherData>.Projection
-                     .Include(x => x.DeviceName)
-                     .Include(x => x.Time)
-                     .Include(x => x.Temperature)
-                     .Exclude("_id"); // Exclude the default "_id" field from the result
-                 
-                 // Sort the documents by temperature in descending order
-                 var sort = Builders<WeatherData>.Sort.Descending(x => x.Temperature);
-                 // Retrieve the document with the maximum temperature for each station within the date/time range
-                 
-                 var result = await _weatherData.Aggregate()
-                 .Match(filter)
-                 .Sort(sort)
-                 .Group(x => x.DeviceName, g => new
-                 {
-                     DeviceName = g.Key,
-                     ReadingDateTime = g.First().Time,
-                     Temperature = g.First().Temperature
-                 })
-                 .Project(x => new WeatherData
-                 {
-                     DeviceName = x.DeviceName,
-                     Time = x.ReadingDateTime,
-                     Temperature = x.Temperature
-                 })
-                 .ToListAsync();
-                 
-                 
-                 string s_name = string.Empty;
-                 DateTime d_time = DateTime.MinValue;
-                 double temp = 0.00;
-                 List<GetOtherDetailsOnSpecificTime> myList = new List<GetOtherDetailsOnSpecificTime>();
-                 
-                 foreach (var data in result)
-                 {
-                     s_name = data.DeviceName;
-                     d_time = data.Time;
-                     temp = data.Temperature;
-                     // Perform desired operations with the retrieved data
-                     var getOtherDetailsOnSpecificTime = new GetOtherDetailsOnSpecificTime { DeviceName = s_name, ReadingTime = d_time, Temperature = temp };
-                     myList.Add(getOtherDetailsOnSpecificTime);
-                 }
-                  return Ok(myList);
+                DateTime startDate = startdate; new DateTime(2020, 1, 1, 0, 0, 0); // Example: January 1, 2023, 12:00:00 AM
+                DateTime finishDate = finishdate; new DateTime(2023, 5, 23, 23, 59, 59); // Example: January 31, 2023, 11:59:59 PM
+
+                // Build the filter to match the date/time range
+                var filter = Builders<WeatherData>.Filter.And(
+                    Builders<WeatherData>.Filter.Gte(x => x.Time, startDate),
+                    Builders<WeatherData>.Filter.Lte(x => x.Time, finishDate)
+                );
+
+                // Define the projection to include the desired fields
+                var projection = Builders<WeatherData>.Projection
+                    .Include(x => x.DeviceName)
+                    .Include(x => x.Time)
+                    .Include(x => x.Temperature)
+                    .Exclude("_id"); // Exclude the default "_id" field from the result
+
+                // Sort the documents by temperature in descending order
+                var sort = Builders<WeatherData>.Sort.Descending(x => x.Temperature);
+                // Retrieve the document with the maximum temperature for each station within the date/time range
+
+                var result = await _weatherData.Aggregate()
+                .Match(filter)
+                .Sort(sort)
+                .Group(x => x.DeviceName, g => new
+                {
+                    DeviceName = g.Key,
+                    ReadingDateTime = g.First().Time,
+                    Temperature = g.First().Temperature
+                })
+                .Project(x => new WeatherData
+                {
+                    DeviceName = x.DeviceName,
+                    Time = x.ReadingDateTime,
+                    Temperature = x.Temperature
+                })
+                .ToListAsync();
+
+
+                string s_name = string.Empty;
+                DateTime d_time = DateTime.MinValue;
+                double temp = 0.00;
+                List<GetOtherDetailsOnSpecificTime> myList = new List<GetOtherDetailsOnSpecificTime>();
+
+                foreach (var data in result)
+                {
+                    s_name = data.DeviceName;
+                    d_time = data.Time;
+                    temp = data.Temperature;
+                    // Perform desired operations with the retrieved data
+                    var getOtherDetailsOnSpecificTime = new GetOtherDetailsOnSpecificTime { DeviceName = s_name, ReadingTime = d_time, Temperature = temp };
+                    myList.Add(getOtherDetailsOnSpecificTime);
+                }
+                return Ok(myList);
             }
             else
             {

@@ -12,8 +12,8 @@ namespace RawClimates.Models
         public ObjectId Id { get; set; }
         public string DeviceName {get; set;}
         public double Precipitation { get; set; }
-        //[JsonConverter(typeof(JsonStringEnumConverter))]
-        public DateTime Time { get; set; } = DateTime.UtcNow;
+        //[JsonPropertyName("Time.$date.$numberLong")]
+        public DateTime Time { get; set; } 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public double Temperature { get; set; }
